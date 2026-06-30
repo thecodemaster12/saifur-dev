@@ -1,6 +1,10 @@
+import MainLayout from "./layouts/MainLayout"
+
 const App = () => {
   return (
-    <>App</>
+    <>
+      <MainLayout />
+    </>
   )
 }
 
