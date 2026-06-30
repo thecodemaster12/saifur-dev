@@ -3,7 +3,7 @@ import MacClock from "../components/MacClock"
 const MainLayout = () => {
     const date = new Date()
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100">
+    <div className="min-h-screen overflow-hidden bg-gray-900 text-gray-100 flex flex-col">
         <header className="flex justify-between p-3">
             <div className="logo flex items-center gap-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="currentColor" fill="none">
@@ -58,8 +58,17 @@ const MainLayout = () => {
                 </div>
             </div>
         </header>
-        <main></main>
-        <footer></footer>
+        <main className="flex-grow"></main>
+        <footer className="bottom-menu flex justify-center mb-3">
+            <div className="dock flex gap-2 p-2 glass-card  rounded">
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Settings.svg" alt="" />
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Terminal.svg" alt="" />
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Safari.svg" alt="" />
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Xcode.svg" alt="" />
+                <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Trash Full.svg" alt="" />
+            </div>
+        </footer>
     </div>
   )
 }
