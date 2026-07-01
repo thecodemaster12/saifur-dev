@@ -4,6 +4,7 @@ import Terminal from "../components/Terminal"
 import VSCode from "../components/VSCode"
 import Safari from "../components/Safari"
 import Settings from "../components/Settings"
+import ProjectsFolder from "../components/ProjectsFolder"
 import { useState, useRef } from "react"
 
 const MainLayout = () => {
@@ -13,6 +14,7 @@ const MainLayout = () => {
     const [isVSCodeOpen, setIsVSCodeOpen] = useState(false)
     const [isSafariOpen, setIsSafariOpen] = useState(false)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+    const [isProjectsOpen, setIsProjectsOpen] = useState(false)
     const [activeWindow, setActiveWindow] = useState(null)
     const desktopRef = useRef(null)
 
@@ -55,6 +57,13 @@ const MainLayout = () => {
         setIsSettingsOpen(nextState)
         if (nextState) {
             setActiveWindow("settings")
+        }
+    }
+    const toggleProjects = () => {
+        const nextState = !isProjectsOpen
+        setIsProjectsOpen(nextState)
+        if (nextState) {
+            setActiveWindow("projects")
         }
     }
   return (
@@ -133,23 +142,75 @@ const MainLayout = () => {
                         ? "glass-card border border-white/5" 
                         : "bg-white/45 border border-white/40 shadow-lg backdrop-blur-md"
                 }`}>
-                    <div className="cursor-pointer">
+                    <div className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            Finder
+                        </span>
                     </div>
-                    <div onClick={toggleNotes} className="cursor-pointer">
+                    <div onClick={toggleProjects} className="group relative cursor-pointer">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Folder.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            Projects Folder
+                        </span>
+                    </div>
+                    <div onClick={toggleNotes} className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Notes.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            Notes
+                        </span>
                     </div>
-                    <div onClick={toggleTerminal} className="cursor-pointer">
+                    <div onClick={toggleTerminal} className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Terminal.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            Terminal
+                        </span>
                     </div>
-                    <div onClick={toggleVSCode} className="cursor-pointer">
+                    <div onClick={toggleVSCode} className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Xcode.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            VS Code
+                        </span>
                     </div>
-                    <div onClick={toggleSafari} className="cursor-pointer">
+                    <div onClick={toggleSafari} className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Safari.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            Safari
+                        </span>
                     </div>
-                    <div onClick={toggleSettings} className="cursor-pointer">
+                    <div onClick={toggleSettings} className="group relative cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Settings.svg" alt="" />
+                        <span className={`absolute left-16 scale-0 rounded-md px-2.5 py-1 text-xs transition-all duration-100 group-hover:scale-100 shadow-lg font-medium whitespace-nowrap select-none pointer-events-none z-[100] border ${
+                            isDarkMode 
+                                ? "bg-gray-950/95 border-gray-800 text-gray-200" 
+                                : "bg-white/95 border-gray-200 text-gray-800"
+                        }`}>
+                            System Settings
+                        </span>
                     </div>
                 </div>
             </aside>
@@ -200,6 +261,14 @@ const MainLayout = () => {
                     setVolume={setVolume}
                     isDarkMode={isDarkMode}
                     setIsDarkMode={setIsDarkMode}
+                />
+                <ProjectsFolder 
+                    isProjectsOpen={isProjectsOpen} 
+                    toggleProjects={toggleProjects} 
+                    isActive={activeWindow === "projects"}
+                    onFocus={() => setActiveWindow("projects")}
+                    desktopRef={desktopRef}
+                    isDarkMode={isDarkMode}
                 />
             </section>
         </main>

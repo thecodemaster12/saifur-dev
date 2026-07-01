@@ -102,7 +102,7 @@ clear
           className="top-[20%] left-[25%] w-md h-96 bg-black/95 text-white"
         >
           <div 
-            className="flex-grow p-3 font-mono text-sm overflow-auto text-left cursor-text scrollbar-thin scrollbar-track-slate-900 scrollbar-thumb-slate-700 hover:scrollbar-thumb-slate-600"
+            className="flex-grow p-3 font-mono text-sm overflow-auto text-left cursor-text"
             onClick={() => inputRef.current?.focus()}
           >
             {history.map((item, index) => (
