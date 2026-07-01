@@ -1,7 +1,9 @@
 import { notes } from "../data/notes";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
-const Notes = ({ isNotesOpen, toggleNotes }) => {
+const Notes = ({ isNotesOpen, toggleNotes, isActive, onFocus, desktopRef }) => {
+  const dragControls = useDragControls();
+
   // Define the Mac-like window animation variants
   const macWindowVariants = {
     hidden: { 
@@ -41,11 +43,24 @@ const Notes = ({ isNotesOpen, toggleNotes }) => {
           initial="hidden"
           animate="visible"
           exit="exit"
+          drag
+          dragControls={dragControls}
+          dragListener={false}
+          dragConstraints={desktopRef}
+          dragMomentum={false}
+          dragElastic={0}
+          onPointerDown={onFocus}
           // Setting the transform origin mimics the window shrinking from/to the bottom edge
-          style={{ transformOrigin: "bottom center" }}
-          className="w-md h-96 overflow-auto border bg-black rounded scrollbar-thin scrollbar-track-slate-100 scrollbar-thumb-slate-400 hover:scrollbar-thumb-slate-500"
+          style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
+          className="absolute top-[10%] left-[10%] w-md h-96 overflow-auto border border-gray-700 bg-gray-950/95 rounded-lg shadow-2xl backdrop-blur-md scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
         >
-          <div className="sticky top-0 bg-gray-900 p-2 flex items-center justify-between">
+          <div 
+            className="sticky top-0 bg-gray-900 p-2 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b border-gray-800/40"
+            onPointerDown={(e) => {
+              dragControls.start(e);
+              onFocus();
+            }}
+          >
             <div className="flex gap-2">
               <div onClick={toggleNotes} className="cursor-pointer w-[13px] h-[13px] bg-red-400 rounded-full"></div>
               <div className="cursor-pointer w-[13px] h-[13px] bg-yellow-400 rounded-full"></div>

@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
-const Terminal = ({ isTerminalOpen, toggleTerminal }) => {
+const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef }) => {
   const [input, setInput] = useState("");
+  const dragControls = useDragControls();
 
   const [history, setHistory] = useState([
     {
@@ -124,11 +125,24 @@ clear
           initial="hidden"
           animate="visible"
           exit="exit"
-          style={{ transformOrigin: "bottom center" }}
-          className="w-md h-96 overflow-auto border bg-black rounded text-white"
+          drag
+          dragControls={dragControls}
+          dragListener={false}
+          dragConstraints={desktopRef}
+          dragMomentum={false}
+          dragElastic={0}
+          onPointerDown={onFocus}
+          style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
+          className="absolute top-[20%] left-[25%] w-md h-96 overflow-auto border border-gray-700 bg-black/95 rounded-lg shadow-2xl backdrop-blur-md text-white scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
           onClick={() => inputRef.current?.focus()}
         >
-          <div className="sticky top-0 bg-gray-900 p-2 flex justify-between">
+          <div 
+            className="sticky top-0 bg-gray-900 p-2 flex justify-between cursor-grab active:cursor-grabbing select-none border-b border-gray-800/40"
+            onPointerDown={(e) => {
+              dragControls.start(e);
+              onFocus();
+            }}
+          >
             <div className="flex gap-2">
               <div
                 onClick={toggleTerminal}

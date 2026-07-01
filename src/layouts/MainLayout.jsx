@@ -2,18 +2,36 @@ import MacClock from "../components/MacClock"
 import Notes from "../components/Notes"
 import Terminal from "../components/Terminal"
 import VSCode from "../components/VSCode"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 const MainLayout = () => {
     const date = new Date()
     const [isNotesOpen, setIsNotesOpen] = useState(false)
     const [isTerminalOpen, setIsTerminalOpen] = useState(false)
+    const [isVSCodeOpen, setIsVSCodeOpen] = useState(false)
+    const [activeWindow, setActiveWindow] = useState(null)
+    const desktopRef = useRef(null)
 
     const toggleNotes = () => {
-        setIsNotesOpen(!isNotesOpen)
+        const nextState = !isNotesOpen
+        setIsNotesOpen(nextState)
+        if (nextState) {
+            setActiveWindow("notes")
+        }
     }
     const toggleTerminal = () => {
-        setIsTerminalOpen(!isTerminalOpen)
+        const nextState = !isTerminalOpen
+        setIsTerminalOpen(nextState)
+        if (nextState) {
+            setActiveWindow("terminal")
+        }
+    }
+    const toggleVSCode = () => {
+        const nextState = !isVSCodeOpen
+        setIsVSCodeOpen(nextState)
+        if (nextState) {
+            setActiveWindow("vscode")
+        }
     }
   return (
     <div className="h-screen overflow-hidden bg-gray-900 text-gray-100 flex flex-col">
@@ -72,23 +90,44 @@ const MainLayout = () => {
             </div>
         </header>
         <main className="flex-grow h-full grid grid-cols-[100px_1fr]">
-            {/* <VSCode /> */}
             <aside className="flex justify-center items-center">
                 <div className="glass-card p-2 rounded-md flex flex-col gap-2">
-                    <div className="">
+                    <div className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
                     </div>
-                    <div onClick={toggleNotes} className="">
+                    <div onClick={toggleNotes} className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Notes.svg" alt="" />
                     </div>
-                    <div onClick={toggleTerminal} className="">
+                    <div onClick={toggleTerminal} className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Terminal.svg" alt="" />
+                    </div>
+                    <div onClick={toggleVSCode} className="cursor-pointer">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Xcode.svg" alt="" />
                     </div>
                 </div>
             </aside>
-            <section className="border">
-                <Notes isNotesOpen={isNotesOpen} toggleNotes={toggleNotes} />
-                <Terminal isTerminalOpen={isTerminalOpen} toggleTerminal={toggleTerminal} />
+            <section ref={desktopRef} className="relative flex-grow h-full overflow-hidden border-l border-gray-800/30">
+                <Notes 
+                    isNotesOpen={isNotesOpen} 
+                    toggleNotes={toggleNotes} 
+                    isActive={activeWindow === "notes"}
+                    onFocus={() => setActiveWindow("notes")}
+                    desktopRef={desktopRef}
+                />
+                <Terminal 
+                    isTerminalOpen={isTerminalOpen} 
+                    toggleTerminal={toggleTerminal} 
+                    isActive={activeWindow === "terminal"}
+                    onFocus={() => setActiveWindow("terminal")}
+                    desktopRef={desktopRef}
+                />
+                <VSCode 
+                    isVSCodeOpen={isVSCodeOpen} 
+                    toggleVSCode={toggleVSCode} 
+                    isActive={activeWindow === "vscode"}
+                    onFocus={() => setActiveWindow("vscode")}
+                    desktopRef={desktopRef}
+                />
             </section>
         </main>
         {/* <footer className="bottom-menu flex justify-center mb-3">
