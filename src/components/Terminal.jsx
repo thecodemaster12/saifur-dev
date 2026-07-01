@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import Window from "./Window";
 
-const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef, isDarkMode }) => {
+const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef, isDarkMode, openResume }) => {
   const [input, setInput] = useState("");
 
   const [history, setHistory] = useState([
@@ -41,8 +41,10 @@ clear
     experience: () =>
       "4+ years building modern web applications.",
 
-    resume: () =>
-      "Opening resume... (later you can open your Resume window)",
+    resume: () => {
+      openResume();
+      return "Opening resume PDF document...";
+    },
 
     contact: () =>
       "Email: hello@example.com\nGitHub: github.com/yourname",
