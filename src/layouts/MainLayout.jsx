@@ -1,14 +1,19 @@
 import MacClock from "../components/MacClock"
 import Notes from "../components/Notes"
+import Terminal from "../components/Terminal"
 import VSCode from "../components/VSCode"
 import { useState } from "react"
 
 const MainLayout = () => {
     const date = new Date()
     const [isNotesOpen, setIsNotesOpen] = useState(false)
+    const [isTerminalOpen, setIsTerminalOpen] = useState(false)
 
     const toggleNotes = () => {
         setIsNotesOpen(!isNotesOpen)
+    }
+    const toggleTerminal = () => {
+        setIsTerminalOpen(!isTerminalOpen)
     }
   return (
     <div className="h-screen overflow-hidden bg-gray-900 text-gray-100 flex flex-col">
@@ -76,10 +81,14 @@ const MainLayout = () => {
                     <div onClick={toggleNotes} className="">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Notes.svg" alt="" />
                     </div>
+                    <div onClick={toggleTerminal} className="">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Terminal.svg" alt="" />
+                    </div>
                 </div>
             </aside>
             <section className="border">
                 <Notes isNotesOpen={isNotesOpen} toggleNotes={toggleNotes} />
+                <Terminal isTerminalOpen={isTerminalOpen} toggleTerminal={toggleTerminal} />
             </section>
         </main>
         {/* <footer className="bottom-menu flex justify-center mb-3">
