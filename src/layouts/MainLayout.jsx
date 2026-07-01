@@ -2,6 +2,7 @@ import MacClock from "../components/MacClock"
 import Notes from "../components/Notes"
 import Terminal from "../components/Terminal"
 import VSCode from "../components/VSCode"
+import Safari from "../components/Safari"
 import { useState, useRef } from "react"
 
 const MainLayout = () => {
@@ -9,6 +10,7 @@ const MainLayout = () => {
     const [isNotesOpen, setIsNotesOpen] = useState(false)
     const [isTerminalOpen, setIsTerminalOpen] = useState(false)
     const [isVSCodeOpen, setIsVSCodeOpen] = useState(false)
+    const [isSafariOpen, setIsSafariOpen] = useState(false)
     const [activeWindow, setActiveWindow] = useState(null)
     const desktopRef = useRef(null)
 
@@ -31,6 +33,13 @@ const MainLayout = () => {
         setIsVSCodeOpen(nextState)
         if (nextState) {
             setActiveWindow("vscode")
+        }
+    }
+    const toggleSafari = () => {
+        const nextState = !isSafariOpen
+        setIsSafariOpen(nextState)
+        if (nextState) {
+            setActiveWindow("safari")
         }
     }
   return (
@@ -104,6 +113,9 @@ const MainLayout = () => {
                     <div onClick={toggleVSCode} className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Xcode.svg" alt="" />
                     </div>
+                    <div onClick={toggleSafari} className="cursor-pointer">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Safari.svg" alt="" />
+                    </div>
                 </div>
             </aside>
             <section ref={desktopRef} className="relative flex-grow h-full overflow-hidden border-l border-gray-800/30">
@@ -126,6 +138,13 @@ const MainLayout = () => {
                     toggleVSCode={toggleVSCode} 
                     isActive={activeWindow === "vscode"}
                     onFocus={() => setActiveWindow("vscode")}
+                    desktopRef={desktopRef}
+                />
+                <Safari 
+                    isSafariOpen={isSafariOpen} 
+                    toggleSafari={toggleSafari} 
+                    isActive={activeWindow === "safari"}
+                    onFocus={() => setActiveWindow("safari")}
                     desktopRef={desktopRef}
                 />
             </section>
