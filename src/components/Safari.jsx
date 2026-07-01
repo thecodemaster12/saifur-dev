@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import Window from "./Window";
 
 const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef, isDarkMode }) => {
   const [urlInput, setUrlInput] = useState("");
@@ -7,7 +8,6 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef, isD
   const [history, setHistory] = useState(["startpage"]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const dragControls = useDragControls();
 
   const navigateTo = (newUrl) => {
     const updatedHistory = history.slice(0, historyIndex + 1);
@@ -299,114 +299,99 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef, isD
     );
   };
 
+  const customHeader = (
+    <>
+      {/* Control dots */}
+      <div className="flex items-center gap-2 w-[80px]">
+        <button 
+          onClick={toggleSafari} 
+          className="cursor-pointer w-[13px] h-[13px] bg-red-400 hover:bg-red-500 rounded-full border-none outline-none"
+        />
+        <div className="w-[13px] h-[13px] bg-yellow-400 rounded-full" />
+        <div className="w-[13px] h-[13px] bg-green-400 rounded-full" />
+      </div>
+
+      {/* Navigation buttons & Address Input */}
+      <div className="flex items-center gap-4 flex-grow max-w-xl justify-center">
+        {/* Back / Forward */}
+        <div className="flex gap-2">
+          <button 
+            onClick={handleBack}
+            disabled={historyIndex === 0}
+            className={`p-1 rounded text-xs cursor-pointer ${
+              historyIndex === 0 
+                ? "text-gray-600" 
+                : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
+            }`}
+          >
+            ◀
+          </button>
+          <button 
+            onClick={handleForward}
+            disabled={historyIndex === history.length - 1}
+            className={`p-1 rounded text-xs cursor-pointer ${
+              historyIndex === history.length - 1 
+                ? "text-gray-600" 
+                : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
+            }`}
+          >
+            ▶
+          </button>
+        </div>
+
+        {/* Address input box */}
+        <div className="relative flex-1 max-w-sm">
+          <input 
+            type="text" 
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            onKeyDown={handleUrlSubmit}
+            placeholder="Search or enter website name"
+            className={`w-full text-center text-xs rounded px-6 py-1.5 outline-none border transition-colors duration-500 ${
+              isDarkMode 
+                ? "bg-gray-800/40 border-gray-700/40 text-gray-200 focus:bg-gray-800/70 focus:border-blue-500/60" 
+                : "bg-white border-gray-300 text-gray-800 focus:bg-white focus:border-blue-500/40"
+            }`}
+          />
+          {urlInput && (
+            <button 
+              onClick={() => { setUrlInput(""); navigateTo("startpage"); }}
+              className="absolute right-2.5 top-1.5 text-gray-500 hover:text-gray-300 text-[10px] cursor-pointer"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Right icons (mock tabs / options) */}
+      <div className="flex gap-3 text-gray-400 w-[80px] justify-end">
+        <span className="cursor-pointer hover:text-gray-200 text-sm">⎋</span>
+        <span className="cursor-pointer hover:text-gray-200 text-sm">⊞</span>
+      </div>
+    </>
+  );
+
   return (
     <AnimatePresence>
       {isSafariOpen && (
-        <motion.div
-          variants={macWindowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          drag
-          dragControls={dragControls}
-          dragListener={false}
-          dragConstraints={desktopRef}
-          dragMomentum={false}
-          dragElastic={0}
-          onPointerDown={onFocus}
-          style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className={`absolute top-[8%] left-[18%] w-[780px] h-[500px] overflow-hidden border rounded-lg shadow-2xl backdrop-blur-md flex flex-col font-sans transition-colors duration-500 ${
-            isDarkMode 
-              ? "border-gray-700 bg-gray-950 text-gray-200" 
-              : "border-gray-300 bg-white text-gray-900"
-          }`}
+        <Window
+          isOpen={isSafariOpen}
+          onClose={toggleSafari}
+          title="Safari"
+          isActive={isActive}
+          onFocus={onFocus}
+          desktopRef={desktopRef}
+          isDarkMode={isDarkMode}
+          customHeader={customHeader}
+          className="top-[8%] left-[18%] w-[780px] h-[500px]"
         >
-          {/* Header & Address Bar */}
-          <div 
-            className={`p-2.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b shrink-0 transition-colors duration-500 ${
-              isDarkMode 
-                ? "bg-gray-950 border-gray-800/60 text-gray-400" 
-                : "bg-gray-100 border-gray-200 text-gray-600"
-            }`}
-            onPointerDown={(e) => {
-              dragControls.start(e);
-              onFocus();
-            }}
-          >
-            {/* Control dots */}
-            <div className="flex items-center gap-2 w-[80px]">
-              <div onClick={toggleSafari} className="cursor-pointer w-[13px] h-[13px] bg-red-400 rounded-full"></div>
-              <div className="cursor-pointer w-[13px] h-[13px] bg-yellow-400 rounded-full"></div>
-              <div className="cursor-pointer w-[13px] h-[13px] bg-green-400 rounded-full"></div>
-            </div>
-
-            {/* Navigation buttons & Address Input */}
-            <div className="flex items-center gap-4 flex-grow max-w-xl justify-center">
-              {/* Back / Forward */}
-              <div className="flex gap-2">
-                <button 
-                  onClick={handleBack}
-                  disabled={historyIndex === 0}
-                  className={`p-1 rounded text-xs cursor-pointer ${
-                    historyIndex === 0 
-                      ? "text-gray-600" 
-                      : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
-                  }`}
-                >
-                  ◀
-                </button>
-                <button 
-                  onClick={handleForward}
-                  disabled={historyIndex === history.length - 1}
-                  className={`p-1 rounded text-xs cursor-pointer ${
-                    historyIndex === history.length - 1 
-                      ? "text-gray-600" 
-                      : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
-                  }`}
-                >
-                  ▶
-                </button>
-              </div>
-
-              {/* Address input box */}
-              <div className="relative flex-1 max-w-sm">
-                <input 
-                  type="text" 
-                  value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
-                  onKeyDown={handleUrlSubmit}
-                  placeholder="Search or enter website name"
-                  className={`w-full text-center text-xs rounded px-6 py-1.5 outline-none border transition-colors duration-500 ${
-                    isDarkMode 
-                      ? "bg-gray-800/40 border-gray-700/40 text-gray-200 focus:bg-gray-800/70 focus:border-blue-500/60" 
-                      : "bg-white border-gray-300 text-gray-800 focus:bg-white focus:border-blue-500/40"
-                  }`}
-                />
-                {urlInput && (
-                  <button 
-                    onClick={() => { setUrlInput(""); navigateTo("startpage"); }}
-                    className="absolute right-2.5 top-1.5 text-gray-500 hover:text-gray-300 text-[10px] cursor-pointer"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Right icons (mock tabs / options) */}
-            <div className="flex gap-3 text-gray-400 w-[80px] justify-end">
-              <span className="cursor-pointer hover:text-gray-200 text-sm">⎋</span>
-              <span className="cursor-pointer hover:text-gray-200 text-sm">⊞</span>
-            </div>
-          </div>
-
-          {/* Webpage Content */}
-          <div className={`flex-1 flex flex-col overflow-hidden transition-colors duration-500 ${
+          <div className={`flex-grow flex flex-col overflow-hidden transition-colors duration-500 ${
             isDarkMode ? "bg-gray-900" : "bg-gray-50"
           }`}>
             {renderPageContent()}
           </div>
-        </motion.div>
+        </Window>
       )}
     </AnimatePresence>
   );

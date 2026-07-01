@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import Window from "./Window";
 
 const Settings = ({ 
   isSettingsOpen, 
@@ -17,25 +18,6 @@ const Settings = ({
   setIsDarkMode
 }) => {
   const [activeTab, setActiveTab] = useState("wallpaper");
-  const dragControls = useDragControls();
-
-  const macWindowVariants = {
-    hidden: { opacity: 0, scale: 0.3, y: 300, filter: "blur(10px)" },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      y: 0, 
-      filter: "blur(0px)",
-      transition: { type: "spring", stiffness: 300, damping: 25 }
-    },
-    exit: { 
-      opacity: 0, 
-      scale: 0.2, 
-      y: 400, 
-      filter: "blur(8px)",
-      transition: { duration: 0.25 }
-    }
-  };
 
   const wallpapers = [
     { name: "macOS Wallpaper", value: "/src/assets/walpaper.jpeg", preview: "bg-blue-600" },
@@ -198,49 +180,16 @@ const Settings = ({
   return (
     <AnimatePresence>
       {isSettingsOpen && (
-        <motion.div
-          variants={macWindowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          drag
-          dragControls={dragControls}
-          dragListener={false}
-          dragConstraints={desktopRef}
-          dragMomentum={false}
-          dragElastic={0}
-          onPointerDown={onFocus}
-          style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className={`absolute top-[12%] left-[22%] w-[680px] h-[460px] overflow-hidden border rounded-lg shadow-2xl backdrop-blur-md flex flex-col font-sans transition-colors duration-500 ${
-            isDarkMode 
-              ? "border-gray-700 bg-gray-950 text-gray-200" 
-              : "border-gray-300 bg-gray-50 text-gray-800"
-          }`}
+        <Window
+          isOpen={isSettingsOpen}
+          onClose={toggleSettings}
+          title="System Settings"
+          isActive={isActive}
+          onFocus={onFocus}
+          desktopRef={desktopRef}
+          isDarkMode={isDarkMode}
+          className="top-[12%] left-[22%] w-[680px] h-[460px]"
         >
-          {/* Header */}
-          <div 
-            className={`p-2.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b shrink-0 transition-colors duration-500 ${
-              isDarkMode 
-                ? "bg-gray-950 border-gray-800/60 text-gray-400" 
-                : "bg-gray-200 border-gray-300 text-gray-600"
-            }`}
-            onPointerDown={(e) => {
-              dragControls.start(e);
-              onFocus();
-            }}
-          >
-            {/* Control dots */}
-            <div className="flex items-center gap-2">
-              <div onClick={toggleSettings} className="cursor-pointer w-[13px] h-[13px] bg-red-400 rounded-full"></div>
-              <div className="cursor-pointer w-[13px] h-[13px] bg-yellow-400 rounded-full"></div>
-              <div className="cursor-pointer w-[13px] h-[13px] bg-green-400 rounded-full"></div>
-            </div>
-            <div className="flex-grow text-center text-xs font-semibold text-gray-400">
-              System Settings
-            </div>
-            <div className="w-[45px]"></div>
-          </div>
-
           {/* Body */}
           <div className="flex-grow flex overflow-hidden">
             {/* Sidebar */}
@@ -276,7 +225,7 @@ const Settings = ({
               {renderContent()}
             </div>
           </div>
-        </motion.div>
+        </Window>
       )}
     </AnimatePresence>
   );

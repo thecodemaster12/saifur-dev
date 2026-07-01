@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import Window from "./Window";
 
 const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef, isDarkMode }) => {
   const [input, setInput] = useState("");
-  const dragControls = useDragControls();
 
   const [history, setHistory] = useState([
     {
@@ -88,81 +88,23 @@ clear
     });
   }, [history]);
 
-  const macWindowVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.3,
-      y: 300,
-      filter: "blur(10px)",
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25,
-      },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.2,
-      y: 400,
-      filter: "blur(8px)",
-      transition: {
-        duration: 0.25,
-      },
-    },
-  };
-
   return (
     <AnimatePresence>
       {isTerminalOpen && (
-        <motion.div
-          variants={macWindowVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          drag
-          dragControls={dragControls}
-          dragListener={false}
-          dragConstraints={desktopRef}
-          dragMomentum={false}
-          dragElastic={0}
-          onPointerDown={onFocus}
-          style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className={`absolute top-[20%] left-[25%] w-md h-96 overflow-auto border rounded-lg shadow-2xl backdrop-blur-md transition-colors duration-500 scrollbar-thin ${
-            isDarkMode 
-              ? "border-gray-700 bg-black/95 text-white scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500" 
-              : "border-gray-300 bg-gray-950/95 text-white scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
-          }`}
-          onClick={() => inputRef.current?.focus()}
+        <Window
+          isOpen={isTerminalOpen}
+          onClose={toggleTerminal}
+          title="Terminal"
+          isActive={isActive}
+          onFocus={onFocus}
+          desktopRef={desktopRef}
+          isDarkMode={isDarkMode}
+          className="top-[20%] left-[25%] w-md h-96 bg-black/95 text-white"
         >
           <div 
-            className={`sticky top-0 p-2 flex justify-between cursor-grab active:cursor-grabbing select-none border-b transition-colors duration-500 ${
-              isDarkMode 
-                ? "bg-gray-900 border-gray-800/40" 
-                : "bg-gray-200 border-gray-300"
-            }`}
-            onPointerDown={(e) => {
-              dragControls.start(e);
-              onFocus();
-            }}
+            className="flex-grow p-3 font-mono text-sm overflow-auto text-left cursor-text scrollbar-thin scrollbar-track-slate-900 scrollbar-thumb-slate-700 hover:scrollbar-thumb-slate-600"
+            onClick={() => inputRef.current?.focus()}
           >
-            <div className="flex gap-2">
-              <div
-                onClick={toggleTerminal}
-                className="w-3 h-3 rounded-full bg-red-500 cursor-pointer"
-              />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-            </div>
-          </div>
-
-          <div className="p-3 font-mono text-sm">
-
             {history.map((item, index) => (
               <div key={index} className="mb-3">
                 {item.command && (
@@ -181,7 +123,7 @@ clear
             ))}
 
             <div className="flex items-center">
-              <span className="text-green-400 mr-2">
+              <span className="text-green-400 mr-2 select-none">
                 saifur@portfolio:~$
               </span>
 
@@ -190,7 +132,7 @@ clear
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent outline-none"
+                className="flex-1 bg-transparent border-none outline-none text-white font-mono text-sm p-0"
                 autoComplete="off"
                 spellCheck={false}
               />
@@ -198,7 +140,7 @@ clear
 
             <div ref={bottomRef} />
           </div>
-        </motion.div>
+        </Window>
       )}
     </AnimatePresence>
   );
