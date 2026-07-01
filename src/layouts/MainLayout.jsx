@@ -1,4 +1,5 @@
 import MacClock from "../components/MacClock"
+import Notes from "../components/Notes"
 import VSCode from "../components/VSCode"
 
 const MainLayout = () => {
@@ -59,10 +60,20 @@ const MainLayout = () => {
                 </div>
             </div>
         </header>
-        <main className="flex-grow h-full">
-            <VSCode />
+        <main className="flex-grow h-full grid grid-cols-[100px_1fr]">
+            {/* <VSCode /> */}
+            <aside className="flex justify-center items-center">
+                <div className="glass-card p-2 rounded-md flex flex-col gap-2">
+                    <div className="">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
+                    </div>
+                </div>
+            </aside>
+            <section className="border">
+                <Notes />
+            </section>
         </main>
-        <footer className="bottom-menu flex justify-center mb-3">
+        {/* <footer className="bottom-menu flex justify-center mb-3">
             <div className="dock flex gap-2 p-2 glass-card  rounded">
                 <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
                 <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Settings.svg" alt="" />
@@ -71,7 +82,7 @@ const MainLayout = () => {
                 <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Xcode.svg" alt="" />
                 <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Trash Full.svg" alt="" />
             </div>
-        </footer>
+        </footer> */}
     </div>
   )
 }
