@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
-const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) => {
+const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef, isDarkMode }) => {
   const [urlInput, setUrlInput] = useState("");
   const [currentUrl, setCurrentUrl] = useState("startpage");
   const [history, setHistory] = useState(["startpage"]);
@@ -77,8 +77,14 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
   const renderPageContent = () => {
     if (currentUrl === "startpage") {
       return (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 select-none text-center bg-gradient-to-b from-gray-900/60 to-gray-950/85">
-          <div className="text-4xl font-extrabold mb-8 text-white/90 tracking-tight">Safari</div>
+        <div className={`flex-grow flex flex-col items-center justify-center p-8 select-none text-center transition-colors duration-500 bg-gradient-to-b ${
+          isDarkMode 
+            ? "from-gray-900/60 to-gray-950/85 text-white" 
+            : "from-gray-100 to-gray-50 text-gray-800"
+        }`}>
+          <div className={`text-4xl font-extrabold mb-8 tracking-tight transition-colors duration-500 ${
+            isDarkMode ? "text-white/90" : "text-gray-900"
+          }`}>Safari</div>
           
           {/* Large Search Input */}
           <div className="relative w-full max-w-lg mb-12">
@@ -88,7 +94,11 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               onKeyDown={handleUrlSubmit}
-              className="w-full bg-gray-800/40 border border-gray-700/60 rounded-full px-5 py-3 text-center text-sm outline-none text-white focus:bg-gray-800/80 focus:border-blue-500/80 transition-all shadow-inner"
+              className={`w-full rounded-full px-5 py-3 text-center text-sm outline-none transition-all shadow-inner border ${
+                isDarkMode 
+                  ? "bg-gray-800/40 border-gray-700/60 text-white focus:bg-gray-800/80 focus:border-blue-500/80" 
+                  : "bg-white border-gray-300 text-gray-800 focus:bg-white focus:border-blue-500 focus:shadow-md"
+              }`}
             />
           </div>
 
@@ -97,29 +107,35 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
             <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 text-left">Favorites</h3>
             <div className="grid grid-cols-4 gap-6">
               {[
-                { name: "Google", url: "https://google.com", color: "bg-red-500/10 text-red-400 hover:bg-red-500/20" },
-                { name: "GitHub", url: "https://github.com", color: "bg-purple-500/10 text-purple-400 hover:bg-purple-500/20" },
-                { name: "LinkedIn", url: "https://linkedin.com", color: "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20" },
-                { name: "Saifur Dev", url: "https://saifur.dev", color: "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20" }
+                { name: "Google", url: "https://google.com", color: isDarkMode ? "bg-red-500/10 text-red-400 hover:bg-red-500/20" : "bg-red-50 text-red-600 hover:bg-red-100" },
+                { name: "GitHub", url: "https://github.com", color: isDarkMode ? "bg-purple-500/10 text-purple-400 hover:bg-purple-500/20" : "bg-purple-50 text-purple-600 hover:bg-purple-100" },
+                { name: "LinkedIn", url: "https://linkedin.com", color: isDarkMode ? "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 hover:bg-blue-100" },
+                { name: "Saifur Dev", url: "https://saifur.dev", color: isDarkMode ? "bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20" : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100" }
               ].map((fav) => (
                 <div 
                   key={fav.name} 
                   onClick={() => navigateTo(fav.url)}
                   className="flex flex-col items-center gap-2 cursor-pointer group"
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-all shadow-lg border border-gray-700/30 ${fav.color}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-all shadow-lg border ${
+                    isDarkMode ? "border-gray-700/30" : "border-gray-200"
+                  } ${fav.color}`}>
                     {fav.name[0]}
                   </div>
-                  <span className="text-xs text-gray-400 group-hover:text-gray-200 transition-colors">{fav.name}</span>
+                  <span className={`text-xs transition-colors ${
+                    isDarkMode ? "text-gray-400 group-hover:text-gray-200" : "text-gray-600 group-hover:text-gray-900"
+                  }`}>{fav.name}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Privacy Report */}
-          <div className="w-full max-w-xl bg-gray-900/40 border border-gray-800/80 rounded-xl p-4 text-left flex items-center justify-between">
+          <div className={`w-full max-w-xl border rounded-xl p-4 text-left flex items-center justify-between transition-colors duration-500 ${
+            isDarkMode ? "bg-gray-900/40 border-gray-800/80" : "bg-white border-gray-200 shadow-sm"
+          }`}>
             <div>
-              <h4 className="text-xs font-bold text-gray-400 mb-1">Privacy Report</h4>
+              <h4 className={`text-xs font-bold mb-1 ${isDarkMode ? "text-gray-400" : "text-gray-700"}`}>Privacy Report</h4>
               <p className="text-xs text-gray-500">In the last seven days, Safari prevented 72 trackers from profiling you.</p>
             </div>
             <div className="text-emerald-400 text-xl font-bold">100%</div>
@@ -299,11 +315,19 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
           dragElastic={0}
           onPointerDown={onFocus}
           style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className="absolute top-[8%] left-[18%] w-[780px] h-[500px] overflow-hidden border border-gray-700 bg-gray-950 rounded-lg shadow-2xl backdrop-blur-md flex flex-col font-sans"
+          className={`absolute top-[8%] left-[18%] w-[780px] h-[500px] overflow-hidden border rounded-lg shadow-2xl backdrop-blur-md flex flex-col font-sans transition-colors duration-500 ${
+            isDarkMode 
+              ? "border-gray-700 bg-gray-950 text-gray-200" 
+              : "border-gray-300 bg-white text-gray-900"
+          }`}
         >
           {/* Header & Address Bar */}
           <div 
-            className="bg-gray-950 p-2.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b border-gray-800/60 shrink-0"
+            className={`p-2.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b shrink-0 transition-colors duration-500 ${
+              isDarkMode 
+                ? "bg-gray-950 border-gray-800/60 text-gray-400" 
+                : "bg-gray-100 border-gray-200 text-gray-600"
+            }`}
             onPointerDown={(e) => {
               dragControls.start(e);
               onFocus();
@@ -323,14 +347,22 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
                 <button 
                   onClick={handleBack}
                   disabled={historyIndex === 0}
-                  className={`p-1 rounded text-xs cursor-pointer ${historyIndex === 0 ? "text-gray-600" : "text-gray-300 hover:bg-gray-800"}`}
+                  className={`p-1 rounded text-xs cursor-pointer ${
+                    historyIndex === 0 
+                      ? "text-gray-600" 
+                      : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
+                  }`}
                 >
                   ◀
                 </button>
                 <button 
                   onClick={handleForward}
                   disabled={historyIndex === history.length - 1}
-                  className={`p-1 rounded text-xs cursor-pointer ${historyIndex === history.length - 1 ? "text-gray-600" : "text-gray-300 hover:bg-gray-800"}`}
+                  className={`p-1 rounded text-xs cursor-pointer ${
+                    historyIndex === history.length - 1 
+                      ? "text-gray-600" 
+                      : (isDarkMode ? "text-gray-300 hover:bg-gray-800" : "text-gray-600 hover:bg-gray-200")
+                  }`}
                 >
                   ▶
                 </button>
@@ -344,7 +376,11 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
                   onChange={(e) => setUrlInput(e.target.value)}
                   onKeyDown={handleUrlSubmit}
                   placeholder="Search or enter website name"
-                  className="w-full bg-gray-800/40 border border-gray-700/40 text-center text-xs rounded px-6 py-1.5 text-gray-200 outline-none focus:bg-gray-800/70 focus:border-blue-500/60"
+                  className={`w-full text-center text-xs rounded px-6 py-1.5 outline-none border transition-colors duration-500 ${
+                    isDarkMode 
+                      ? "bg-gray-800/40 border-gray-700/40 text-gray-200 focus:bg-gray-800/70 focus:border-blue-500/60" 
+                      : "bg-white border-gray-300 text-gray-800 focus:bg-white focus:border-blue-500/40"
+                  }`}
                 />
                 {urlInput && (
                   <button 
@@ -365,7 +401,9 @@ const Safari = ({ isSafariOpen, toggleSafari, isActive, onFocus, desktopRef }) =
           </div>
 
           {/* Webpage Content */}
-          <div className="flex-1 flex flex-col overflow-hidden bg-gray-900">
+          <div className={`flex-1 flex flex-col overflow-hidden transition-colors duration-500 ${
+            isDarkMode ? "bg-gray-900" : "bg-gray-50"
+          }`}>
             {renderPageContent()}
           </div>
         </motion.div>

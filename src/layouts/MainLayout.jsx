@@ -3,6 +3,7 @@ import Notes from "../components/Notes"
 import Terminal from "../components/Terminal"
 import VSCode from "../components/VSCode"
 import Safari from "../components/Safari"
+import Settings from "../components/Settings"
 import { useState, useRef } from "react"
 
 const MainLayout = () => {
@@ -11,8 +12,15 @@ const MainLayout = () => {
     const [isTerminalOpen, setIsTerminalOpen] = useState(false)
     const [isVSCodeOpen, setIsVSCodeOpen] = useState(false)
     const [isSafariOpen, setIsSafariOpen] = useState(false)
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false)
     const [activeWindow, setActiveWindow] = useState(null)
     const desktopRef = useRef(null)
+
+    // System Settings States
+    const [wallpaper, setWallpaper] = useState("/src/assets/walpaper.jpeg")
+    const [brightness, setBrightness] = useState(100)
+    const [volume, setVolume] = useState(80)
+    const [isDarkMode, setIsDarkMode] = useState(true)
 
     const toggleNotes = () => {
         const nextState = !isNotesOpen
@@ -42,9 +50,29 @@ const MainLayout = () => {
             setActiveWindow("safari")
         }
     }
+    const toggleSettings = () => {
+        const nextState = !isSettingsOpen
+        setIsSettingsOpen(nextState)
+        if (nextState) {
+            setActiveWindow("settings")
+        }
+    }
   return (
-    <div className="h-screen overflow-hidden bg-gray-900 text-gray-100 flex flex-col">
-        <header className="flex justify-between p-3">
+    <div 
+        className={`h-screen overflow-hidden text-gray-100 flex flex-col transition-all duration-500 ${
+            wallpaper.startsWith("bg-") ? wallpaper : ""
+        }`}
+        style={
+            !wallpaper.startsWith("bg-")
+                ? { backgroundImage: `url('${wallpaper}')`, backgroundSize: "cover", backgroundPosition: "center" }
+                : {}
+        }
+    >
+        <header className={`flex justify-between p-3 select-none border-b transition-colors duration-500 ${
+            isDarkMode 
+                ? "bg-black/10 text-gray-100 border-transparent" 
+                : "bg-white/30 text-gray-900 border-white/20 backdrop-blur-md shadow-xs"
+        }`}>
             <div className="logo flex items-center gap-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="currentColor" fill="none">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2461 6C11.2461 6.41 11.5861 6.75 11.9961 6.75C14.5361 6.75 16.2462 4.29 16.2462 2C16.2462 1.59 15.9062 1.25 15.4962 1.25C12.9562 1.25 11.2461 3.71 11.2461 6ZM14.6161 2.93C13.7661 3.29 13.1361 4.14 12.8761 5.07C13.7261 4.71 14.3561 3.86 14.6161 2.93ZM13.7461 22.67C14.3261 22.93 15.0561 23.25 15.8961 23.25C17.9461 23.25 19.7661 20.1 20.7061 17.4C20.8361 17.02 20.6561 16.61 20.2861 16.46C18.9261 15.89 18.0861 14.56 18.0861 13C18.0861 11.79 18.656 10.89 19.886 10.14C20.056 10.03 20.1861 9.86 20.2261 9.66C20.2661 9.46 20.2262 9.25 20.1161 9.08C18.6761 6.92 16.5561 6.75 15.9361 6.75C14.7673 6.75 14.0326 7.04906 13.4477 7.28712C13.4371 7.29144 13.4266 7.29573 13.4161 7.3L13.1361 7.42C12.8661 7.54 12.7461 7.59 12.4961 7.59C12.1424 7.59 11.8562 7.47415 11.4479 7.30884L11.4261 7.3C11.4055 7.29176 11.3847 7.28343 11.3638 7.27503C10.7754 7.03907 10.0545 6.75 8.88611 6.75C6.70611 6.75 3.24609 8.31 3.24609 13C3.24609 17.69 6.41613 23.25 9.09613 23.25C9.93613 23.25 10.6661 22.93 11.2461 22.67L11.2719 22.6588C11.7222 22.4629 12.1428 22.28 12.4961 22.28C12.8494 22.28 13.27 22.4629 13.7203 22.6588L13.7461 22.67ZM14.338 21.2965C13.7605 21.0476 13.163 20.79 12.4961 20.79C11.8361 20.79 11.2261 21.05 10.6461 21.3L10.6235 21.3099C10.1492 21.5175 9.61783 21.75 9.09613 21.75C7.73613 21.75 4.74609 17.52 4.74609 13C4.74609 9.54 7.28611 8.25 8.88611 8.25C9.79611 8.25 10.3361 8.47 10.8661 8.69C11.3461 8.89 11.8461 9.09 12.4961 9.09C13.0661 9.09 13.4061 8.94 13.7461 8.79L13.9861 8.69C14.5061 8.47 15.0361 8.25 15.9361 8.25C16.3061 8.25 17.4461 8.34 18.4161 9.34C17.1961 10.3 16.5861 11.53 16.5861 13C16.5861 14.9 17.5361 16.6 19.0661 17.52C18.0361 20.15 16.6661 21.75 15.8961 21.75C15.3761 21.75 14.8261 21.51 14.3461 21.3L14.338 21.2965Z" fill="currentColor"></path>
@@ -99,8 +127,12 @@ const MainLayout = () => {
             </div>
         </header>
         <main className="flex-grow h-full grid grid-cols-[100px_1fr]">
-            <aside className="flex justify-center items-center">
-                <div className="glass-card p-2 rounded-md flex flex-col gap-2">
+            <aside className="flex justify-center items-center select-none">
+                <div className={`p-2 rounded-xl flex flex-col gap-2 transition-all duration-500 ${
+                    isDarkMode 
+                        ? "glass-card border border-white/5" 
+                        : "bg-white/45 border border-white/40 shadow-lg backdrop-blur-md"
+                }`}>
                     <div className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />
                     </div>
@@ -116,6 +148,9 @@ const MainLayout = () => {
                     <div onClick={toggleSafari} className="cursor-pointer">
                         <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Safari.svg" alt="" />
                     </div>
+                    <div onClick={toggleSettings} className="cursor-pointer">
+                        <img draggable="false" className="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Settings.svg" alt="" />
+                    </div>
                 </div>
             </aside>
             <section ref={desktopRef} className="relative flex-grow h-full overflow-hidden border-l border-gray-800/30">
@@ -125,6 +160,7 @@ const MainLayout = () => {
                     isActive={activeWindow === "notes"}
                     onFocus={() => setActiveWindow("notes")}
                     desktopRef={desktopRef}
+                    isDarkMode={isDarkMode}
                 />
                 <Terminal 
                     isTerminalOpen={isTerminalOpen} 
@@ -132,6 +168,7 @@ const MainLayout = () => {
                     isActive={activeWindow === "terminal"}
                     onFocus={() => setActiveWindow("terminal")}
                     desktopRef={desktopRef}
+                    isDarkMode={isDarkMode}
                 />
                 <VSCode 
                     isVSCodeOpen={isVSCodeOpen} 
@@ -139,6 +176,7 @@ const MainLayout = () => {
                     isActive={activeWindow === "vscode"}
                     onFocus={() => setActiveWindow("vscode")}
                     desktopRef={desktopRef}
+                    isDarkMode={isDarkMode}
                 />
                 <Safari 
                     isSafariOpen={isSafariOpen} 
@@ -146,9 +184,30 @@ const MainLayout = () => {
                     isActive={activeWindow === "safari"}
                     onFocus={() => setActiveWindow("safari")}
                     desktopRef={desktopRef}
+                    isDarkMode={isDarkMode}
+                />
+                <Settings 
+                    isSettingsOpen={isSettingsOpen} 
+                    toggleSettings={toggleSettings} 
+                    isActive={activeWindow === "settings"}
+                    onFocus={() => setActiveWindow("settings")}
+                    desktopRef={desktopRef}
+                    wallpaper={wallpaper}
+                    setWallpaper={setWallpaper}
+                    brightness={brightness}
+                    setBrightness={setBrightness}
+                    volume={volume}
+                    setVolume={setVolume}
+                    isDarkMode={isDarkMode}
+                    setIsDarkMode={setIsDarkMode}
                 />
             </section>
         </main>
+        {/* Brightness overlay */}
+        <div 
+            className="fixed inset-0 pointer-events-none z-[99999] bg-black transition-opacity duration-100"
+            style={{ opacity: (100 - brightness) / 100 * 0.8 }}
+        />
         {/* <footer className="bottom-menu flex justify-center mb-3">
             <div className="dock flex gap-2 p-2 glass-card  rounded">
                 <img draggable="false" class="select-none hover:scale-[1.1] transition-all" width={50} src="/src/assets/mac-icons/Finder.svg" alt="" />

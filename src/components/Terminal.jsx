@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
-const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef }) => {
+const Terminal = ({ isTerminalOpen, toggleTerminal, isActive, onFocus, desktopRef, isDarkMode }) => {
   const [input, setInput] = useState("");
   const dragControls = useDragControls();
 
@@ -133,11 +133,19 @@ clear
           dragElastic={0}
           onPointerDown={onFocus}
           style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className="absolute top-[20%] left-[25%] w-md h-96 overflow-auto border border-gray-700 bg-black/95 rounded-lg shadow-2xl backdrop-blur-md text-white scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
+          className={`absolute top-[20%] left-[25%] w-md h-96 overflow-auto border rounded-lg shadow-2xl backdrop-blur-md transition-colors duration-500 scrollbar-thin ${
+            isDarkMode 
+              ? "border-gray-700 bg-black/95 text-white scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500" 
+              : "border-gray-300 bg-gray-950/95 text-white scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
+          }`}
           onClick={() => inputRef.current?.focus()}
         >
           <div 
-            className="sticky top-0 bg-gray-900 p-2 flex justify-between cursor-grab active:cursor-grabbing select-none border-b border-gray-800/40"
+            className={`sticky top-0 p-2 flex justify-between cursor-grab active:cursor-grabbing select-none border-b transition-colors duration-500 ${
+              isDarkMode 
+                ? "bg-gray-900 border-gray-800/40" 
+                : "bg-gray-200 border-gray-300"
+            }`}
             onPointerDown={(e) => {
               dragControls.start(e);
               onFocus();

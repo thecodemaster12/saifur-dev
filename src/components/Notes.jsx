@@ -1,7 +1,7 @@
 import { notes } from "../data/notes";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 
-const Notes = ({ isNotesOpen, toggleNotes, isActive, onFocus, desktopRef }) => {
+const Notes = ({ isNotesOpen, toggleNotes, isActive, onFocus, desktopRef, isDarkMode }) => {
   const dragControls = useDragControls();
 
   // Define the Mac-like window animation variants
@@ -52,10 +52,18 @@ const Notes = ({ isNotesOpen, toggleNotes, isActive, onFocus, desktopRef }) => {
           onPointerDown={onFocus}
           // Setting the transform origin mimics the window shrinking from/to the bottom edge
           style={{ transformOrigin: "bottom center", zIndex: isActive ? 40 : 10 }}
-          className="absolute top-[10%] left-[10%] w-md h-96 overflow-auto border border-gray-700 bg-gray-950/95 rounded-lg shadow-2xl backdrop-blur-md scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500"
+          className={`absolute top-[10%] left-[10%] w-md h-96 overflow-auto border rounded-lg shadow-2xl backdrop-blur-md scrollbar-thin transition-colors duration-500 ${
+            isDarkMode 
+              ? "border-gray-700 bg-gray-950/95 text-gray-100 scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500" 
+              : "border-gray-300 bg-white/95 text-gray-800 scrollbar-track-slate-100 scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400"
+          }`}
         >
           <div 
-            className="sticky top-0 bg-gray-900 p-2 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b border-gray-800/40"
+            className={`sticky top-0 p-2 flex items-center justify-between cursor-grab active:cursor-grabbing select-none border-b transition-colors duration-500 ${
+              isDarkMode 
+                ? "bg-gray-900 border-gray-800/40 text-gray-200" 
+                : "bg-gray-100 border-gray-200 text-gray-600"
+            }`}
             onPointerDown={(e) => {
               dragControls.start(e);
               onFocus();
