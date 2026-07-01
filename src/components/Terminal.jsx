@@ -84,7 +84,7 @@ clear
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior: "auto",
     });
   }, [history]);
 

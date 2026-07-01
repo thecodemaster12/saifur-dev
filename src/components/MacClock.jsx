@@ -4,13 +4,21 @@ const MacClock = () => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    // Update the time every second
-    const timerId = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
+    let intervalId;
+    const updateTime = () => setTime(new Date());
 
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(timerId);
+    // Calculate delay until the next minute boundary starts
+    const delay = 60000 - (Date.now() % 60000);
+
+    const timeoutId = setTimeout(() => {
+      updateTime();
+      intervalId = setInterval(updateTime, 60000);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   // Format the date to match macOS style
